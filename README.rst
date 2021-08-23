@@ -1,4 +1,46 @@
+Gradle restart
+==============
+So I've restarted with gradle instead because the instructions from the original link seemed to have some heavy dependencies on things that aren't available in the versions Debian has packaged.
+I think I've gotten further, but not quite there yet.
+
+Mostly based on https://developer.okta.com/blog/2018/08/10/basic-android-without-an-ide
+with some manual changes to account for version mismatches, again.
+
+Dependencies
+------------
+Debian bullseye::
+
+    sudo apt purge openjdk-17-jdk-headless
+    sudo apt install android-sdk android-sdk-platform-23 gradle openjdk-11-jdk-headless
+
+Process
+-------
+
+::
+
+    gradle build
+
+Currently broken with::
+
+    > Task :app:compileDebugJavaWithJavac FAILED
+    /home/mike/vcs/cyber/com.prisonpc.cacert-installer/app/src/main/java/com/prisonpc/cacertinstaller/MainActivity.java:11: error: package R does not exist
+            setContentView(R.layout.activity_main);
+                            ^
+    1 error
+
+Still working on what's wrong
+
+
+
+
+
+
+
+Old stuff
+=========
+
 Based on info/instructions found at: https://stackoverflow.com/questions/29178552/hello-world-using-the-android-sdk-alone-no-ide#29313378
+Until that started failing miserably and I started basing it on this: https://gist.github.com/SilverShades02/861f3e55fddfba02ded147bbfcaba030
 
 Skipped "Setting up the Android SDK", as the packages were seemingly available in Debian.
 
@@ -43,9 +85,10 @@ Building the code
 
    Then Jack (.jayce → .dex)::
 
-       java -jar /usr/lib/android-sdk/build-tools/24.0.2/jack.jar \
-         --import classes.jayce --output-dex .
+       java -jar /usr/lib/android-sdk/build-tools/24.0.2/jack.jar --import classes.jayce --output-dex . \
+         -D jack.source.digest.algo=SHA-512 -D sched.vfs.case-insensitive.algo=SHA-512 -D jack.library.digest.algo=SHA-512
 
+   NOTE: The -D options were added due to getting errors about each of those defaulting to 'SHA' which isn't a supported option
    Android bytecode used to be called "Dalvik executable code", and so "dex".
 
    You could replace steps 2 and 3 with a single call to Jack if you like; it can compile directly from Java source (.java → .dex). But there are advantages to compiling with javac. It's a better known, better documented and more widely applicable tool.
