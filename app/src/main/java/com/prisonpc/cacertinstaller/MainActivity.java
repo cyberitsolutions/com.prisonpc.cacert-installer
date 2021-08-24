@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends Activity {
 
@@ -19,6 +20,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final TextView textV = new TextView( MainActivity.this );
+        Log.i("FIDME prisonpc: ", "hello world");
 
         InputStream is = this.getResources().openRawResource(R.raw.textfile);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
