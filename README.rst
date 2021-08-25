@@ -33,7 +33,11 @@ If you typo the password it gives a stacktrace, not a nice error::
 
     apksigner sign --ks ~/.android/release.keystore --out ./com.prisonpc.cacertinstaller.apk ./app/build/outputs/apk/release/app-release-unsigned.apk
 
-FIXME: Upload it to Google. I did this via the GUI and it worked fine
+FIXME: Upload it to Google. I did this via the GUI and it worked fine. Can't find any info specific to private store
+       https://stackoverflow.com/questions/21829495/how-to-upload-an-android-app-to-the-app-store-via-command-line
+       https://andresand.medium.com/automate-publishing-app-bundle-or-apk-to-google-play-store-8641f0ba2f64
+       https://stasheq.medium.com/upload-apk-to-google-play-via-command-line-script-d93b0d6a28c5
+       https://developers.google.com/android-publisher/api-ref/rest
 
 
 Handy one-liners during development
