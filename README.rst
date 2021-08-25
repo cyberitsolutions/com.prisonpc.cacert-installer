@@ -22,9 +22,18 @@ Install it on a device::
 
     adb install ./app/build/outputs/apk/debug/app-debug.apk
 
-FIXME: Sign the package for uploading to Google
+Create a signing keystore thing.
+NOTE this from Google: "If you plan to publish your apps on Google Play, the key you use to sign your app must have a validity period ending after 22 October 2033. Google Play enforces this requirement to ensure that users can seamlessly upgrade apps when new versions are available." -- https://developer.android.com/studio/publish/app-signing#considerations
+I think this keystore file is supposed to have multiple keys in the one database-like file, not sure::
 
-FIXME: Upload it to Google
+    keytool -genkey -v -keystore ~/.android/release.keystore -alias mike-prisonpcemm@cyber.com.au -keyalg RSA -keysize 2048 -validity 7300
+
+Sign the APK
+If you typo the password it gives a stacktrace, not a nice error::
+
+    apksigner sign --ks ~/.android/release.keystore --out ./com.prisonpc.cacertinstaller.apk ./app/build/outputs/apk/release/app-release-unsigned.apk
+
+FIXME: Upload it to Google. I did this via the GUI and it worked fine
 
 
 Handy one-liners during development
