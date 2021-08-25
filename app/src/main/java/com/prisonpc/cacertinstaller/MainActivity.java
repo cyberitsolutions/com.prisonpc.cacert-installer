@@ -12,16 +12,20 @@ import android.widget.TextView;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 
+// For the uninstall part that still requires user input
+import android.content.Intent;
+import android.net.Uri;
 
 public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final TextView textV = new TextView( MainActivity.this );
-        Log.i("FIDME prisonpc: ", "hello world");
+        Log.i("com.prisonpc.cacertinstaller: ", "Hello World");
 
-        InputStream cert_file = getResources().openRawResource(R.raw.cyber);
+        final TextView textV = new TextView( MainActivity.this );
+
+        InputStream cert_file = getResources().openRawResource(R.raw.com_prisonpc_crt);
 
         // FIXME: This should probably be a "file2byteArray" helper-function
         ByteArrayOutputStream cert_bytes = new ByteArrayOutputStream();
@@ -41,15 +45,23 @@ public class MainActivity extends Activity {
         }
 
 
-        Log.i("FIDME prisonpc: ", "Creating dpm");
+        Log.i("com.prisonpc.cacertinstaller: ", "Registering DPM");
         DevicePolicyManager dpm = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
-        Log.i("FIDME prisonpc: ", "Installing CA Cert");
+        Log.i("com.prisonpc.cacertinstaller: ", "Installing CA cert");
         if (! dpm.installCaCert(null, cert_bytes.toByteArray())) { 
-            textV.setText("installCaCert  Failed");
+            Log.i("com.prisonpc.cacertinstaller: ", "installCaCert failed apparently");
+            textV.setText("installCaCert Failed");
+            setContentView( textV );
         } else {
-                textV.setText("installCaCert  Succeeded");
+            Log.i("com.prisonpc.cacertinstaller: ", "installCaCert succeeded");
+            textV.setText("installCaCert Succeeded. Uninstalling myself.");
+            setContentView( textV );
+
+            Log.i("com.prisonpc.cacertinstaller: ", "Trying to uninstall myself");
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:com.prisonpc.cacertinstaller"));
+            startActivity(uninstallIntent);
+
         }
-        setContentView( textV );
     }
 }
 
