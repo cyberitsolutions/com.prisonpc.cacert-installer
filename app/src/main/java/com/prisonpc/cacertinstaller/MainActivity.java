@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("com.prisonpc.cacertinstaller: ", "Hello World");
+        Log.i("prisonpc.cacert: ", "Hello World");
 
         final TextView textV = new TextView( MainActivity.this );
 
@@ -45,19 +45,19 @@ public class MainActivity extends Activity {
         }
 
 
-        Log.i("com.prisonpc.cacertinstaller: ", "Registering DPM");
+        Log.i("prisonpc.cacert: ", "Registering DPM");
         DevicePolicyManager dpm = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
-        Log.i("com.prisonpc.cacertinstaller: ", "Installing CA cert");
+        Log.i("prisonpc.cacert: ", "Installing CA cert");
         if (! dpm.installCaCert(null, cert_bytes.toByteArray())) { 
-            Log.i("com.prisonpc.cacertinstaller: ", "installCaCert failed apparently");
+            Log.i("prisonpc.cacert: ", "installCaCert failed apparently");
             textV.setText("installCaCert Failed");
             setContentView( textV );
         } else {
-            Log.i("com.prisonpc.cacertinstaller: ", "installCaCert succeeded");
+            Log.i("prisonpc.cacert: ", "installCaCert succeeded");
             textV.setText("installCaCert Succeeded. Uninstalling myself.");
             setContentView( textV );
 
-            Log.i("com.prisonpc.cacertinstaller: ", "Trying to uninstall myself");
+            Log.i("prisonpc.cacert: ", "Trying to uninstall myself");
             Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:com.prisonpc.cacertinstaller"));
             startActivity(uninstallIntent);
 

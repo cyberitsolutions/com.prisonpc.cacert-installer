@@ -16,9 +16,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    // I don't like doing this, but I just want things to work and we can clean up lint errors later.
     lintOptions {
-        abortOnError false
+        // Because things don't quite play nicely with Debian's packaged android-sdk the linter can't find the API database.
+        // I really dislike disabling all of "LintError" as that sounds like it'll have a lot of other issues,
+        // but I couldn't find a quick/easy way to fix the actual problem.
+        // I figured this was better than ignoring *all* errors.
+        // > .../app: Error: Can't find API database; API check not performed [LintError]
+        disable "LintError"
     }
 }
 
