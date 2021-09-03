@@ -5,7 +5,8 @@ android {
     compileSdkVersion 23
     defaultConfig {
         applicationId "com.prisonpc.cacertinstaller"
-        minSdkVersion 15
+        // "Call requires API level 21 (current min is 15): android.app.admin.DevicePolicyManager#installCaCert"
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 2
         versionName "0.2"

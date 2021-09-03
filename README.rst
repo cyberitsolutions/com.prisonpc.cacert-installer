@@ -8,7 +8,6 @@ Dependencies
 ============
 Debian bullseye::
 
-    sudo apt purge openjdk-17-jdk-headless
     sudo apt install android-sdk android-sdk-platform-23 gradle openjdk-11-jdk-headless
 
 Build process
@@ -17,6 +16,7 @@ Build process
 Build the unsigned/debug/dev pacakge::
 
     gradle build
+    # NOTE: It doesn't currently work with openjdk-17 (FIXME) so either uninstall it, or if you keep it installed, run add this argument to the build: -Dorg.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64/
 
 Install it on a device::
 
