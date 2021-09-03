@@ -39,6 +39,9 @@ FIXME: Upload it to Google. I did this via the GUI and it worked fine. Can't fin
        https://stasheq.medium.com/upload-apk-to-google-play-via-command-line-script-d93b0d6a28c5
        https://developers.google.com/android-publisher/api-ref/rest
 
+Setting the wallpaper
+=====================
+Just place a valid JPG or PNG file at app/src/main/res/drawable/wallpaper.(jpg|png) and rebuild the package.
 
 Handy one-liners during development
 ===================================

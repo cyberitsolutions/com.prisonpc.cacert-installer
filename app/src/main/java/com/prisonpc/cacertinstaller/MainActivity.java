@@ -12,21 +12,30 @@ import android.widget.TextView;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 
-// For the uninstall part that still requires user input
-import android.content.Intent;
-import android.net.Uri;
+// Delayed exit function
+import java.util.Timer;
+import java.util.TimerTask;
+import java.lang.System;
+
+// Set the wallpaper
+import android.content.res.Resources;
+import android.app.WallpaperManager;
+
 
 public class MainActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("prisonpc.cacert: ", "Hello World");
+        Log.d("prisonpc.cacert", "Hello World");
+
+        // FIXME: This kind of thing is fucking stupid, throw an exception properly
+        boolean errored = false;
 
         final TextView textV = new TextView( MainActivity.this );
+        setContentView( textV );
 
+        // Read the CA cert into a byte stream array
         InputStream cert_file = getResources().openRawResource(R.raw.com_prisonpc_crt);
-
         // FIXME: This should probably be a "file2byteArray" helper-function
         ByteArrayOutputStream cert_bytes = new ByteArrayOutputStream();
         int i;
@@ -45,22 +54,49 @@ public class MainActivity extends Activity {
         }
 
 
-        Log.i("prisonpc.cacert: ", "Registering DPM");
-        DevicePolicyManager dpm = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
-        Log.i("prisonpc.cacert: ", "Installing CA cert");
-        if (! dpm.installCaCert(null, cert_bytes.toByteArray())) { 
-            Log.i("prisonpc.cacert: ", "installCaCert failed apparently");
-            textV.setText("installCaCert Failed");
-            setContentView( textV );
-        } else {
-            Log.i("prisonpc.cacert: ", "installCaCert succeeded");
-            textV.setText("installCaCert Succeeded. Uninstalling myself.");
-            setContentView( textV );
+        // Install the CA cert
+        DevicePolicyManager dpm;
+        Log.d("prisonpc.cacert", "Registering DPM");
+        dpm = (DevicePolicyManager)getSystemService(Context.DEVICE_POLICY_SERVICE);
+        Log.d("prisonpc.cacert", "Installing CA cert");
+        try {
+            if (! dpm.installCaCert(null, cert_bytes.toByteArray())) {
+                // Note I don't know what it means when we get this response,
+                // but every code example I find for this function says to do this if/else test
+                throw new Exception("Got a negative response when running installCaCert");
+            } else {
+                Log.i("prisonpc.cacert", "installCaCert succeeded");
+                textV.setText("installCaCert Succeeded. Exiting in 3s.");
+            }
+        } catch (Exception e) {
+            Log.e("prisonpc.cacert", "There was an exception trying to installCaCert");
+            Log.e("prisonpc.cacert", "exception", e);
+            textV.setText("installCaCert failed, contact Cyber IT Solutions.");
 
-            Log.i("prisonpc.cacert: ", "Trying to uninstall myself");
-            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:com.prisonpc.cacertinstaller"));
-            startActivity(uninstallIntent);
+            errored = true;
+        }
 
+        // Change the wallpaper
+        final WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+        try {
+            wallpaperManager.setResource(R.drawable.wallpaper);
+        } catch (Exception e) {
+            Log.e("prisonpc.cacert", "There was an exception trying to set the wallpaper");
+            Log.e("prisonpc.cacert", "exception", e);
+            textV.setText("Setting wallpaper failed, contact Cyber IT Solutions.");
+
+            errored = true;
+        }
+
+        if (! errored) {
+            new Timer().schedule(new TimerTask(){
+                @Override
+                public void run(){
+                    Log.d("prisonpc.cacert", "Exiting");
+                    finishAndRemoveTask();
+                    System.exit(0);
+                }
+            }, 3000);
         }
     }
 }
