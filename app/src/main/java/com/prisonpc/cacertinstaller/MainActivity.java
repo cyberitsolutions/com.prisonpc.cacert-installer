@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
         }
 
         if (! errored) {
+            setResult(RESULT_OK);  // Needed to let the provisioning stuff know that we finished successfully
             new Timer().schedule(new TimerTask(){
                 @Override
                 public void run(){

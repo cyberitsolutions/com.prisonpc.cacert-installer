@@ -8,8 +8,8 @@ android {
         // "Call requires API level 21 (current min is 15): android.app.admin.DevicePolicyManager#installCaCert"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 2
-        versionName "0.2"
+        versionCode 4
+        versionName "0.4"
     }
     buildTypes {
         release {
